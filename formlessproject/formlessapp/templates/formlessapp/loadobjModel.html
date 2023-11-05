@@ -28,34 +28,64 @@
    <canvas id="model-view" class="border col-span-5 text-center text-4xl bg-gray-300"></canvas> 
 
    <script>
-     const canvas = document.getElementById("model-view"); 
-     const engine = new BABYLON.Engine(canvas, true); 
+    const canvas = document.getElementById("model-view");
+    const engine = new BABYLON.Engine(canvas, true);
 
-     const createScene = function () {
-       const scene = new BABYLON.Scene(engine);
-       scene.clearColor = new BABYLON.Color4(0.5, 0.5, 0.5, 1.0);
-       BABYLON.SceneLoader.ImportMeshAsync("", "{% static 'formlessapp/modelfiles/mclaren/base.obj' %}", "");
+    const createScene = function () {
+      const scene = new BABYLON.Scene(engine);
+      scene.clearColor = new BABYLON.Color4(0.5, 0.5, 0.5, 1.0);
 
-       const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 20, new BABYLON.Vector3(40, 10, 20));
-       camera.alpha = Math.PI / 4; // Rotate the camera 45 degrees horizontally
-       camera.beta = Math.PI / 2; // Rotate the camera 45 degrees vertically
-       camera.radius = 30; // Zoom the camera out
-       camera.attachControl(canvas, true);
-       
-       const light = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, 0), scene);
+      const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 20, new BABYLON.Vector3(0, 2, 2));
+      camera.alpha = Math.PI / 5; // Rotate the camera 45 degrees horizontally
+      camera.beta = Math.PI / 3; // Rotate the camera 45 degrees vertically
+      camera.radius = 12; // Zoom the camera out
+      camera.attachControl(canvas, true);
+      camera.panningAxis = new BABYLON.Vector3(0, 0, 0); // Disable panning
 
-       return scene;
-     };
+      const light = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, 0), scene);
 
-     const scene = createScene(); 
+      BABYLON.SceneLoader.ImportMeshAsync("", "{% static 'formlessapp/modelfiles/mclaren-tire/tire.obj' %}", "").then((result) => {
+        const meshes = result.meshes;
+        const materials = result.materials;
 
-     engine.runRenderLoop(function () {
-       scene.render();
-     });
+        // List the model part names
+        const modelPartsList = document.getElementById("model-parts-list").querySelector("ul");
+        meshes.forEach((mesh) => {
+          modelPartsList.innerHTML += `<li>${mesh.name}</li>`;
+        });
 
-     window.addEventListener("resize", function () {
-       engine.resize();
-     });
-   </script>
+        // Change the model part color to red when selected
+        meshes.forEach((mesh) => {
+          mesh.actionManager = new BABYLON.ActionManager(scene);
+          mesh.actionManager.registerAction(
+            new BABYLON.ExecuteCodeAction(
+              BABYLON.ActionManager.OnPickTrigger,
+              function () {
+                if (selectedPart) {
+                  // Reset the color of the previously selected part
+                  selectedPart.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+                }
+                // Set the color of the selected part to red
+                mesh.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+                selectedPart = mesh; // Update the selected part
+              }
+            )
+          );
+        });
+      });
+
+      return scene;
+    };
+
+    const scene = createScene();
+
+    engine.runRenderLoop(function () {
+      scene.render();
+    });
+
+    window.addEventListener("resize", function () {
+      engine.resize();
+    });
+  </script>
  </body>
 </html>

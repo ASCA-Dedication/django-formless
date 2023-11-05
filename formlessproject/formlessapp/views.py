@@ -50,14 +50,18 @@ def home(request):
 
     # return render(request,'formlessapp/index.html', params)
 
-    # return render(request,'formlessapp/home.html')
-    return render(request,'formlessapp/loadobjModel.html')
+    return render(request,'formlessapp/home.html')
+    # return render(request,'formlessapp/loadobjModel.html')
     # return render(request,'formlessapp/loadModel.html')
 
 
 def customemodel(request):
     # return HttpResponse('Teamzeffort    |      business Page')
     return render(request,'formlessapp/customemodel.html')
+
+def test(request):
+    # return HttpResponse('Teamzeffort    |      business Page')
+    return render(request,'formlessapp/loadobjModel.html')
 
 # Actions
 
@@ -72,24 +76,28 @@ def chat_view(request):
         print("Chat - NER : ",NER_result)
 
         color_name = NER_result["Colors"]
+        color_name = color_name[0]
         # modelname = NER_result["Part_Names"]
         # changeModelColor(modelname, color_name)
         
         # changeScenLights(color_name)
         # Example usage:
         # color_name = "red"
-        light_diffuse = changeScenLights(color_name)
+        # light_diffuse = changeScenLights(color_name)
         # print(f'new BABYLON.Color3({light_diffuse[0]}, {light_diffuse[1]}, {light_diffuse[2]})')
-        print("light_diffuse : ", light_diffuse)
+        # print("light_diffuse : ", light_diffuse)
 
-
+        modelname = "mclaren-tire"
+        part_name = "lambert2SG.001"
+        visibility = 1.0
+        Model_Edit(modelname, color_name, part_name, visibility)
 
 
         chatList.append(input_text)
         # params = {"chatList" : input_text}
         params = {
             "chatList" : chatList,
-            "light_diffuse" : light_diffuse
+            # "light_diffuse" : light_diffuse
             }
     # return HttpResponse("Success")  # You can return any response you like
     return render(request,'formlessapp/customemodel.html', params)
@@ -103,6 +111,8 @@ def chat_view(request):
 
 part_names = ["wheels", "tires", "tire", "suspension", "exhaust", "spoiler", "spoilers", "wing", "lighting"]
 colors = ["red", "black", "blue", "green", "white", "silver", "yellow", "purple", "orange", "gray", "pink", "brown", "turquoise", "gold", "maroon", "lavender", "teal", "cyan", "indigo", "violet"]
+
+# red, black, blue, green, white, silver, yellow, purple, orange, gray, pink, brown, turquoise, gold, maroon, lavender, teal, cyan, indigo, violet
 
 
 # Function to remove stop words from a chat
@@ -142,11 +152,7 @@ def filtertext(input_text):
         "Colors" : colors_found,
         "Part_Names" : parts_found,
     }
-
-    # print(f"Input Text: {input_text}")
-    # print(f"Colors: {colors_found}")
-    # print(f"Part Names: {parts_found}")
-
+    # print(f"Input Text: {input_text} \t\t\t Colors: {colors_found} \t\t\t Part Names: {parts_found}")
     return data
 
 def extract_color_and_part_from_text(input_text):
@@ -155,36 +161,12 @@ def extract_color_and_part_from_text(input_text):
     return color_matches, part_matches
 
 
-part_names = ["wheels", "tires", "tire", "suspension", "exhaust", "spoiler", "spoilers", "wing", "lighting"]
 
-
-def changeModelColor(modelname, color):
-    # Load the .glb file
-    # gltf = GLTF2().load("static\spoke.glb")
-    allmodel_paths = {
-        "wheels"        : "formlessapp\modelfiles\wheels.glb",
-        "tires"         : "formlessapp/static/formlessapp/modelfiles/wheels.glb",
-        "tire"          : "wheels",
-        "suspension"    : "wheels",
-        "exhaust"       : "wheels",
-        "spoiler"       : "wheels",
-        "spoilers"      : "wheels",
-        "wing"          : "wheels",
-        "lighting"      : "wheels",
-    }
-
-    file_path = 'formlessapp/modelfiles/wheels.glb'  # Replace with the actual path
-
-    # Construct the full file path
-    # full_file_path = os.path.join(settings.STATIC_ROOT, file_path)
+    
 
 
 
-    # gltf = GLTF2().load(allmodel_paths[modelname])
-    gltf = GLTF2().load(r"formlessapp\static\formlessapp\modelfiles\wheels.glb")
-
-    material = gltf.materials[0] # Access the material
-
+def map_color_to_mtl(color_name, visibility=1.0):
     # Define the list of colors and their corresponding RGB values
     colors = {
         "red": [1.0, 0.0, 0.0, 1.0],
@@ -209,28 +191,138 @@ def changeModelColor(modelname, color):
         "violet": [0.93, 0.51, 0.93, 1.0]
     }
 
-    # List of colors
-    color_names = ["red", "black", "blue", "green", "white", "silver", "yellow", "purple", "orange", "gray", "pink", "brown", "turquoise", "gold", "maroon", "lavender", "teal", "cyan", "indigo", "violet"]
+    if color_name in colors:
+        color_values = colors[color_name]
+        mtlContent = {
+            # 'Ns': '100.0',  # New shininess value
+            'Ka': f'{color_values[0]:.6f} {color_values[1]:.6f} {color_values[2]:.6f}',  # Ambient color
+            'Kd': f'{color_values[0]:.6f} {color_values[1]:.6f} {color_values[2]:.6f}',  # Diffuse color
+            # 'Ks': '1.0 1.0 1.0',  # Specular color
+            # 'Ke': '0.0 0.0 0.0',  # Emissive color
+            # 'Ni': '1.5',  # Optical density
+            'd': visibility,  # Opacity
+            # 'illum': '3',  # Illumination model (3 for specular reflection)
+        }
+        return mtlContent
+    else:
+        default ={
+            # 'Ns': '100.0',  # New shininess value
+            'Ka': '0.1 0.0 0.0',  # New ambient color
+            'Kd': '0.0 0.6 0.0',  # New diffuse color
+            # 'Ks': '1.0 1.0 1.0',  # New specular color
+            # 'Ke': '0.0 0.0 0.0',  # New emissive color
+            # 'Ni': '1.5',  # New optical density
+            'd': '1.0',  # opacity
+            # 'illum': '3',  # New illumination model (3 for specular reflection)
+        }
+        return default
 
-    # Create RGB color lists for each color
-    rgb_color_lists = {color: colors[color] for color in color_names}
+# # Example usage:
+# color_name = "blue"  # Change this to the color you want
+# new_material_properties = map_color_to_mtl(color_name)
 
-    # rgb_color_lists['red']
-    # material.pbrMetallicRoughness.baseColorFactor = rgb_color_lists['black']
-    # material.pbrMetallicRoughness.baseColorFactor = [0.0, 0.0, 0.0, 1.0]
-    material.pbrMetallicRoughness.baseColorFactor = [0.0, 1.0, 0.0, 1.0]
-
-    # Change the color
-    # material.pbrMetallicRoughness.baseColorFactor = [1.0, 0.0, 0.0, 1.0] # Red color
-    # material.pbrMetallicRoughness.baseColorFactor = [0.0, 1.0, 0.0, 1.0] # Green color
-    # material.pbrMetallicRoughness.baseColorFactor = [0.0, 0.0, 1.0, 1.0] # Blue color
+# if new_material_properties:
+#     print(f"New MTL properties for {color_name}:\n{new_material_properties}")
+# else:
+#     print(f"Color {color_name} not found in the color mapping dictionary.")
 
 
-    # Save the changes
-    # gltf.save(fr"formlessapp\static\formlessapp\modelfiles\{modelname}.glb")
-    gltf.save(r"formlessapp\static\formlessapp\modelfiles\wheels.glb")
+# def read_file(request):
+#     file_path = 'formlessapp/modelfiles/mclaren/base.txt'  # Path relative to your app's 'static' directory
+
+#     # Construct the full file path
+#     full_file_path = os.path.join(static(""), file_path)
+
+#     try:
+#         with open(full_file_path, 'r') as file:
+#             file_content = file.read()
+#         return HttpResponse(file_content)
+#     except FileNotFoundError:
+#         return HttpResponse("File not found")
+
+
+
+def Model_Edit(modelname, color_name, part_name, visibility):
+
+    if modelname == "mclaren":
+        mtl_file_path = "formlessapp/modelfiles/mclaren/base.mtl"
+    else:
+        # mtl_file_path = "formlessapp/modelfiles/mclaren-tire/base.mtl"
+
+        mtl_file_path = "C:/Users\Atharva Pawar/Documents/GitHub/django-formless/formlessproject/formlessapp/static/formlessapp/modelfiles/mclaren-tire/tire.mtl"
+
+    # Construct the full file path
+    # mtl_file_path = os.path.join(static("formlessapp"), mtl_file_path)
+
+    # file_path = 'formlessapp/modelfiles/mclaren/base.txt'  # Path relative to your app's 'static' directory
+
+    # Construct the full file path
+    full_file_path = os.path.join(settings.STATIC_ROOT, mtl_file_path)
+    print("full_file_path : ", full_file_path)
+
+    # Read the existing MTL file and store its content in memory
+    with open(mtl_file_path, 'r') as mtl_file:
+        mtl_lines = mtl_file.readlines()
+
+    '''
+    # Define the new values you want to set for the "Material.008" entry
+    new_material_properties = {
+        'Ns': '100.0',  # New shininess value
+        'Ka': '0.1 0.0 0.0',  # New ambient color
+        'Kd': '0.0 0.6 0.0',  # New diffuse color
+        'Ks': '1.0 1.0 1.0',  # New specular color
+        'Ke': '0.0 0.0 0.0',  # New emissive color
+        'Ni': '1.5',  # New optical density
+        'd': '1.0',  # opacity
+        'illum': '3',  # New illumination model (3 for specular reflection)
+    }
+    '''
+
+    # Find and modify the "Material.008" entry in the MTL file
+    # material_name = "Material.008"
+
+    new_material_properties = map_color_to_mtl(color_name, visibility)
+
+    material_name = part_name
+    in_material = False
+
+    for i, line in enumerate(mtl_lines):
+        if line.startswith('newmtl ') and line.split()[1] == material_name:
+            in_material = True
+        elif in_material:
+            # Stop when reaching the next "newmtl" entry
+            if line.startswith('newmtl '):
+                in_material = False
+                break
+            else:
+                # Update the properties in memory
+                for key, value in new_material_properties.items():
+                    if line.startswith(key):
+                        mtl_lines[i] = f'{key} {value}\n'
+
+    # Write the updated content back to the MTL file
+    with open(mtl_file_path, 'w') as mtl_file:
+        mtl_file.writelines(mtl_lines)
+
+    print(f"Updated material '{material_name}' in the MTL file.")
     
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 # Dictionary to map color names to RGB values
 color_mapping = {
     "red": (1.0, 0.0, 0.0),
@@ -255,81 +347,36 @@ color_mapping = {
     "violet": (0.93, 0.51, 0.93)
 }
 
-
-    
-def changeScenLights(color_name):
-    
-    all_color_names = ["red", "black", "blue", "green", "white", "silver", "yellow", "purple", "orange", "gray", "pink", "brown", "turquoise", "gold", "maroon", "lavender", "teal", "cyan", "indigo", "violet"]
-    
-    # color_present = False
-    color_ = str(color_name[0])
-    
-    if color_ in all_color_names:
-        rgb_values = color_mapping[color_]
-        print("if - rgb_values : ", rgb_values)
-        return rgb_values  # Return the RGB values as a tuple
-
-    else:
-        print("else - rgb_values : ", rgb_values)
-
-        return (0, 0.2, 0.8)  # Default RGB values
-    
-
-    # for item in all_color_names:
-    #     print("color_ : ", color_, type(color_), "item : ", str(item), type(item))
-    #     if color_  == item:
-    #         color_present = True
-    #     else:
-    #         color_present = False
-
-    # if color_present:
-    #     print("if -  fun - color_name : ", color_)
-    #     rgb_values = color_mapping[color_]
-    #     print("rgb_values : ", rgb_values)
-    #     return rgb_values
-    # else:
-    #     print("else fun - color_name : ", color_)
-
-    #     return (0, 0.2, 0.8)  # Default RGB values
+'''
 
 
-    # colorDisplay.innerHTML = 'light.diffuse = new BABYLON.Color3(0, 0.2, 0.8); // Change the light color to {{ color_name }}';
+'''
+def about(request):
+    return render(request,'formlessapp/about.html')
+
+def contact(request):
+    coreMem = Contact.objects.filter(mem_tag="core")
+    teamMem = Contact.objects.filter(mem_tag="team")
+    # print(f"coreMem: {coreMem} \n teamMem: {teamMem}")
+
+    return render(request, 'formlessapp/contact.html', {'core':coreMem,'team':teamMem })
+
+def productView(request, myslug):
+    # Fetch the product using the id
+    product = Product.objects.filter(slug=myslug)
+    prodCat = product[0].category
+    # print(prodCat)
+    recproduct = Product.objects.filter(category=prodCat)
+    # print(recproduct)
+
+    # randomObjects = random.sample(recproduct, 2)
+    randomObjects = random.sample(list(recproduct), 2)
 
 
-    # [red, green, blue, opacity]
-    # [1.0, 0.0, 0.0, 1.0] # Red color
-    # [0.0, 1.0, 0.0, 1.0] # Green color
-    # [0.0, 0.0, 1.0, 1.0] # Blue color
+    return render(request, 'formlessapp/prodView.html', {'product':product[0],'recprod':randomObjects })
 
 
+def index(request):
+    return HttpResponse('Teamzeffort    |      index Page')
 
-
-
-
-# def about(request):
-#     return render(request,'formlessapp/about.html')
-
-# def contact(request):
-#     coreMem = Contact.objects.filter(mem_tag="core")
-#     teamMem = Contact.objects.filter(mem_tag="team")
-#     # print(f"coreMem: {coreMem} \n teamMem: {teamMem}")
-
-#     return render(request, 'formlessapp/contact.html', {'core':coreMem,'team':teamMem })
-
-# def productView(request, myslug):
-#     # Fetch the product using the id
-#     product = Product.objects.filter(slug=myslug)
-#     prodCat = product[0].category
-#     # print(prodCat)
-#     recproduct = Product.objects.filter(category=prodCat)
-#     # print(recproduct)
-
-#     # randomObjects = random.sample(recproduct, 2)
-#     randomObjects = random.sample(list(recproduct), 2)
-
-
-#     return render(request, 'formlessapp/prodView.html', {'product':product[0],'recprod':randomObjects })
-
-
-# def index(request):
-#     return HttpResponse('Teamzeffort    |      index Page')
+'''
