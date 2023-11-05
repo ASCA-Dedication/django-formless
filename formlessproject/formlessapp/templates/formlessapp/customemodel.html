@@ -1,0 +1,126 @@
+{% extends 'formlessapp/base.html' %} {% block title %}CustomWheelz | Home{% endblock %}
+
+{% block css %}
+    .bg-custom-background {
+        background-image: url('https://images.freeimages.com/images/large-previews/c77/colourful-abstract-1172933.jpg');
+        background-size: cover; /* Optional: Adjust this to control the image size */
+        /* You can add more background properties as needed */
+    }         
+    
+    input {
+    background: transparent;
+    }
+    input:active,
+    input:focus {
+    background: transparent;
+    outline: none;
+
+    }
+{% endblock %}
+
+<div>{% block content %} {% load static %}</div>
+
+
+<div class="bg-custom-background">
+    <div>
+     <!-- Content Starts  -->
+
+        <div class="h-[40rem] bg-gray-500 opacity-90">
+            <div>
+                <!-- <div class="text-center py-4 text-4xl uppercase font-bold font-mono text-black">Formless</div> -->
+                
+                <div class="grid grid-cols-3 py-4 border">
+
+                    <div class="flex justify-center full">
+                        <div class="px-4 py-4 w-11/12  content-center h-[36rem] border rounded-xl shadow-2xl">
+                            <div class="text-gray-300 text-center text-xl font-bold font-mono mb-1">Formless Chat</div>
+                            <!-- <div class="text-gray-300 text-md font-bold col-span-3 h-[27rem]"> -->
+                            <div class="text-gray-300 text-md font-bold col-span-3 h-[27rem] overflow-y-auto mb-2">
+
+                            <li>Welcome to CustomWheelz with formless tech, lets design your Dream Car...</li>
+
+                            {% for chat_item in chatList %}
+                                <li>{{ chat_item }}</li>
+                            {% endfor %}
+
+                                 
+                        </div>
+                            
+                            <div class="h-10 ">
+                                <!-- <input class="mt-10 text-white bg-none text-2xl" type="text" placeholder="Type Here..."> -->
+                                <form method="post" action="{% url 'chat_view' %}">
+                                    {% csrf_token %}
+                                    <div class="grid grid-cols-10 gap-1">
+                                        
+                                        <div class="col-span-9">
+                                            <input class="text-gray-300 bg-none text-xl w-full border border-gray-300 rounded-l-lg p-1" type="text" name="input_text" placeholder="Type Here...">
+                                        </div>
+
+                                        <div>
+                                            <button type="submit" class="text-gray-300 border border-gray-300 py-1 pb-2 px-4 rounded-r-lg hover:bg-gray-400"><i class="fa-solid fa-paper-plane"></i></button>
+                                        </div>
+                                        
+                                    </div>
+                                </form>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-span-2 text-center border mr-4 rounded-lg px-4 py-4 full">
+                        <!-- render model -->
+                        <div class="text-center text-xl font-bold font-mono mb-2 ">Model view</div>
+
+                        <canvas id="model-view" class="border bg-gray-300 p-1 rounded"></canvas> 
+    
+    
+                    </div>
+                    
+
+                </div>
+            </div>
+        </div> 
+
+     <!-- Content ENDS  -->
+    </div>
+
+
+    <script>
+        const canvas = document.getElementById("model-view"); 
+        const engine = new BABYLON.Engine(canvas, true); 
+
+        const createScene = function () {
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color4(0.5, 0.5, 0.5, 1.0);
+            //BABYLON.SceneLoader.ImportMeshAsync("", "{% static 'formlessapp/modelfiles/wheels.glb' %}", "");
+            BABYLON.SceneLoader.ImportMeshAsync("", "{% static 'formlessapp/modelfiles/bugatti4.glb' %}", "");
+            //const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
+            //const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+            
+            const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 20, new BABYLON.Vector3(10, 10, 20));
+            camera.alpha = Math.PI / 60; // Rotate the camera 45 degrees horizontally
+            camera.beta = Math.PI / 2; // Rotate the camera 45 degrees vertically
+            camera.radius = 30; // Zoom the camera out
+            camera.attachControl(canvas, true);
+            
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+            //light.diffuse = new BABYLON.Color3(1, 0, 0); // Change the light color to red
+            light.diffuse = new BABYLON.Color3({{ light_diffuse.0 }}, {{ light_diffuse.1 }}, {{ light_diffuse.2 }}); // Change the light color to red
+
+            return scene;
+        };
+
+        const scene = createScene(); 
+
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });    
+</script>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+django-admin startproject formlessproject
+python manage.py startapp formlessapp
+
+python manage.py makemigrations
+python manage.py migrate
+
+
+
+
+### Run the Website
+python manage.py runserver
