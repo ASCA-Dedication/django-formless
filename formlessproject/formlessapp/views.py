@@ -21,7 +21,7 @@ import nltk
 from nltk.stem import PorterStemmer
 
 # Model Edit
-from pygltflib import GLTF2
+# from pygltflib import GLTF2
 
 
 # ---------------------------------------------------------------------------
@@ -75,9 +75,11 @@ def chat_view(request):
         NER_result = filtertext(input_text)
         print("Chat - NER : ",NER_result)
 
-        color_name = NER_result["Colors"]
-        color_name = color_name[0]
-        # modelname = NER_result["Part_Names"]
+        color_name = NER_result["Colors"][0]
+        try:
+            part_name = NER_result["Part_Names"][0]
+        except:
+            part_name = "tires"
         # changeModelColor(modelname, color_name)
         
         # changeScenLights(color_name)
@@ -88,7 +90,7 @@ def chat_view(request):
         # print("light_diffuse : ", light_diffuse)
 
         modelname = "mclaren-tire"
-        part_name = "lambert2SG.001"
+        # part_name = "lambert2SG.001"
         visibility = 1.0
         Model_Edit(modelname, color_name, part_name, visibility)
 
@@ -193,6 +195,7 @@ def map_color_to_mtl(color_name, visibility=1.0):
 
     if color_name in colors:
         color_values = colors[color_name]
+        print("mtl - color_name : ", color_name)
         mtlContent = {
             # 'Ns': '100.0',  # New shininess value
             'Ka': f'{color_values[0]:.6f} {color_values[1]:.6f} {color_values[2]:.6f}',  # Ambient color
@@ -310,8 +313,18 @@ def Model_Edit(modelname, color_name, part_name, visibility):
 
 
 
+part_names = ["wheels", "tires", "tire", "suspension", "exhaust", "spoiler", "spoilers", "wing", "lighting"]
 
-
+'''
+model_parts = {
+"wheels" : "lambert2SG.001",
+"wheels" : "Material.012, Material.011, Material.009",
+"exhaust" : "Material.008",
+"glass" : "Material.003",
+"dashboard" : "Material.002",
+"body" : "Material.001",
+}
+'''
 
 
 
