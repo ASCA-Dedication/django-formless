@@ -78,8 +78,13 @@ def chat_view(request):
         color_name = NER_result["Colors"][0]
         try:
             part_name = NER_result["Part_Names"][0]
+            print("try - part_name selected : ", part_name)
         except:
-            part_name = "tires"
+            part_name = "tire"
+        
+            print("except - part_name selected : ", part_name)
+
+        print("global - part_name selected : ", part_name)
         # changeModelColor(modelname, color_name)
         
         # changeScenLights(color_name)
@@ -111,7 +116,8 @@ def chat_view(request):
 # Custom Funtions
 # ---------------------------------------------------------------------------
 
-part_names = ["wheels", "tires", "tire", "suspension", "exhaust", "spoiler", "spoilers", "wing", "lighting"]
+part_names = ["wheels", "wheel", "tires", "tire", "light", "exhaust","glass", "dashboard", "body", "spoiler", "spoilers", "wing", "lighting", "lights"]
+
 colors = ["red", "black", "blue", "green", "white", "silver", "yellow", "purple", "orange", "gray", "pink", "brown", "turquoise", "gold", "maroon", "lavender", "teal", "cyan", "indigo", "violet"]
 
 # red, black, blue, green, white, silver, yellow, purple, orange, gray, pink, brown, turquoise, gold, maroon, lavender, teal, cyan, indigo, violet
@@ -248,11 +254,11 @@ def map_color_to_mtl(color_name, visibility=1.0):
 def Model_Edit(modelname, color_name, part_name, visibility):
 
     if modelname == "mclaren":
-        mtl_file_path = "formlessapp/modelfiles/mclaren/base.mtl"
+        mtl_file_path = "C:/Users\Atharva Pawar/Documents/GitHub/django-formless/formlessproject/formlessapp/static/formlessapp/modelfiles/maclaren-tire/tire.mtl"
     else:
         # mtl_file_path = "formlessapp/modelfiles/mclaren-tire/base.mtl"
 
-        mtl_file_path = "C:/Users\Atharva Pawar/Documents/GitHub/django-formless/formlessproject/formlessapp/static/formlessapp/modelfiles/mclaren-tire/tire.mtl"
+        mtl_file_path = "C:/Users\Atharva Pawar/Documents/GitHub/django-formless/formlessproject/formlessapp/static/formlessapp/modelfiles/maclaren-tire/tire.mtl"
 
     # Construct the full file path
     # mtl_file_path = os.path.join(static("formlessapp"), mtl_file_path)
@@ -261,7 +267,7 @@ def Model_Edit(modelname, color_name, part_name, visibility):
 
     # Construct the full file path
     full_file_path = os.path.join(settings.STATIC_ROOT, mtl_file_path)
-    print("full_file_path : ", full_file_path)
+    print("full_file_path : ", mtl_file_path)
 
     # Read the existing MTL file and store its content in memory
     with open(mtl_file_path, 'r') as mtl_file:
@@ -286,7 +292,26 @@ def Model_Edit(modelname, color_name, part_name, visibility):
 
     new_material_properties = map_color_to_mtl(color_name, visibility)
 
-    material_name = part_name
+    # part_names = ["wheels", "wheel", "tires", "tire", "light", "exhaust","glass", "dashboard", "body", "spoiler", "spoilers", "wing", "lighting", "lights"]
+
+    model_parts_names = {
+    "wheels" : "lambert2SG.001",
+    "wheel" : "lambert2SG.001",
+    "tire" : "lambert2SG.001",
+    "tires" : "lambert2SG.001",
+    "light" : "Material.012, Material.011, Material.009",
+    "lights" : "Material.012, Material.011, Material.009",
+    "lighting" : "Material.012, Material.011, Material.009",
+    "exhaust" : "Material.008",
+    "glass" : "Material.003",
+    "dashboard" : "Material.002",
+    "body" : "Material.001",
+    }
+
+    
+
+    material_name = model_parts_names[part_name]
+    print("render html file : ", material_name)
     in_material = False
 
     for i, line in enumerate(mtl_lines):
@@ -313,18 +338,7 @@ def Model_Edit(modelname, color_name, part_name, visibility):
 
 
 
-part_names = ["wheels", "tires", "tire", "suspension", "exhaust", "spoiler", "spoilers", "wing", "lighting"]
 
-'''
-model_parts = {
-"wheels" : "lambert2SG.001",
-"wheels" : "Material.012, Material.011, Material.009",
-"exhaust" : "Material.008",
-"glass" : "Material.003",
-"dashboard" : "Material.002",
-"body" : "Material.001",
-}
-'''
 
 
 
