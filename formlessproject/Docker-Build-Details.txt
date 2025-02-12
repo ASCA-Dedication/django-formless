@@ -1,0 +1,81 @@
+### Tutorial:
+Krish - https://www.youtube.com/watch?v=8vmKtS8W7IQ&t=1s
+
+
+### terminal cmd:
+
+(   atharvapawar456  )
+
+eg: atharvapawar456 / doc-test
+
+[repo name must be lowercase]
+
+--------------------------------------
+### build docker image
+--------------------------------------
+
+docker build -t atharvapawar456/asca-formless-customewheelz .
+
+
+### Delete docker image
+
+docker image rm -f atharvapawar456/asca-formless-customewheelz
+
+
+### Rename docker image
+
+# docker tag welcome-flask-app atharvapawar456/welcome-flask-app1
+
+
+
+### docker basic cmd:
+
+docker images
+
+docker ps
+
+docker stop cont_id
+
+docker --version
+
+
+
+
+--------------------------------------
+### run docker image
+--------------------------------------
+
+docker run -p 8000:8000 atharvapawar456/asca-formless-customewheelz
+
+
+docker run -p atharvapawar456/asca-formless-customewheelz
+
+
+
+### python manage.py runserver 8000
+
+http://127.0.0.1:8000/
+
+
+
+
+http://127.0.0.1:5000
+
+### can access from local host
+
+http://192.168.1.102:5000/
+
+
+
+### run docker images : atharvapawar456/securix-semgrep
+
+docker run -p 5000:5000 atharvapawar456/securix-semgrep
+
+pip install --upgrade pip
+
+
+
+
+error:
+
+Watching for file changes with StatReloader

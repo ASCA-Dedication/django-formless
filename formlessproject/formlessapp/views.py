@@ -10,6 +10,8 @@ from django.templatetags.static import static
 import os
 from django.conf import settings
 
+# mtlFilePath = os.path.join(settings.MEDIA_ROOT, 'setup/maclaren-tire/tire.mtl')
+mtlFilePath = os.path.join(settings.MTL_ROOT, 'static/formlessapp/modelfiles/maclaren-tire/tire.mtl')
 
 
 # NER 
@@ -56,12 +58,13 @@ def home(request):
 
 
 def customemodel(request):
-    # return HttpResponse('Teamzeffort    |      business Page')
     return render(request,'formlessapp/customemodel.html')
 
 def test(request):
-    # return HttpResponse('Teamzeffort    |      business Page')
     return render(request,'formlessapp/loadobjModel.html')
+
+def help(request):
+    return render(request,'formlessapp/help.html')
 
 # Actions
 
@@ -252,13 +255,15 @@ def map_color_to_mtl(color_name, visibility=1.0):
 
 
 def Model_Edit(modelname, color_name, part_name, visibility):
+    global mtlFilePath
 
     if modelname == "mclaren":
         mtl_file_path = "C:/Users\Atharva Pawar/Documents/GitHub/django-formless/formlessproject/formlessapp/static/formlessapp/modelfiles/maclaren-tire/tire.mtl"
     else:
         # mtl_file_path = "formlessapp/modelfiles/mclaren-tire/base.mtl"
 
-        mtl_file_path = "C:/Users\Atharva Pawar/Documents/GitHub/django-formless/formlessproject/formlessapp/static/formlessapp/modelfiles/maclaren-tire/tire.mtl"
+        # mtl_file_path = "C:/Users\Atharva Pawar/Documents/GitHub/django-formless/formlessproject/formlessapp/static/formlessapp/modelfiles/maclaren-tire/tire.mtl"
+        mtl_file_path = mtlFilePath
 
     # Construct the full file path
     # mtl_file_path = os.path.join(static("formlessapp"), mtl_file_path)
@@ -292,8 +297,6 @@ def Model_Edit(modelname, color_name, part_name, visibility):
 
     new_material_properties = map_color_to_mtl(color_name, visibility)
 
-    # part_names = ["wheels", "wheel", "tires", "tire", "light", "exhaust","glass", "dashboard", "body", "spoiler", "spoilers", "wing", "lighting", "lights"]
-
     model_parts_names = {
     "wheels" : "lambert2SG.001",
     "wheel" : "lambert2SG.001",
@@ -307,8 +310,6 @@ def Model_Edit(modelname, color_name, part_name, visibility):
     "dashboard" : "Material.002",
     "body" : "Material.001",
     }
-
-    
 
     material_name = model_parts_names[part_name]
     print("render html file : ", material_name)

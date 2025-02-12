@@ -6,6 +6,7 @@ urlpatterns = [
     path("customemodel", views.customemodel, name="customemodel"),
 
     path("test", views.test, name="test"),
+    path("help", views.help, name="help"),
     # path("about/", views.about, name="AboutUs"),
     # path("contact/", views.contact, name="ContactUs"),
     # path("products/<int:myid>", views.productView, name="ProductView"),

@@ -123,12 +123,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
-STATICFILES_DIRS = [
-    # BASE_DIR / "static",
-    os.path.join(BASE_DIR, 'static'),
+# STATICFILES_DIRS = [
+#     # BASE_DIR / "static",
+#     os.path.join(BASE_DIR, 'static'),
 
-    # "/var/www/static/",
-]
+#     # "/var/www/static/",
+# ]
 
 
 # Default primary key field type
@@ -139,3 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+MTL_URL = '/formlessapp/'
+MTL_ROOT = os.path.join(BASE_DIR, 'formlessapp')

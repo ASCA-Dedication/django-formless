@@ -11,4 +11,29 @@ python manage.py migrate
 python manage.py runserver
 
 
+python manage.py runserver 0.0.0.0:8000
+
+
 nvidia-smi
+
+
+pip3 install Django
+
+pip3 install spacy
+python -m spacy download en_core_web_sm
+
+pip3 install nltk
+
+
+
+
+pip freeze > requirements.txt
+
+pip install -r requirements.txt
+
+pip uninstall -r requirements.txt
+
+C:\Users\Atharva Pawar\Documents\GitHub\django-formless\formlessproject\formlessapp\static\formlessapp\modelfiles\maclaren-tire\tire.mtl
+C:\Users\Atharva Pawar\Documents\GitHub\django-formless\formlessproject\formlessapp\static/formlessapp/modelfiles/maclaren-tire/tire.mtl
+
+

@@ -1,0 +1,62 @@
+{% extends 'formlessapp/base.html' %}
+
+{% block title %}
+CustomWheelz | Help Center
+{% endblock %}
+
+{% block content %}
+<div class="m-4 font-sans">
+
+    <div class="container mx-auto mt-2 p-4 bg-gray-300 text-gray-800 rounded shadow-lg">
+        <h2 class="text-2xl font-semibold text-center">Frequently Asked Questions</h2>
+        <ul class="list-disc list-inside mt-2">
+            <li>
+                <strong>Q: How does the Car Customization Assistant work?</strong><br>
+                A: Our assistant uses natural conversations to collect user preferences, suggests configurations, and converts them into requirements for automated implementation.
+            </li>
+            <li>
+                <strong>Q: How does it simplify preference consolidation?</strong><br>
+                A: Our innovative approach replaces manual processes with a 24/7 virtual personalization expert.
+            </li>
+            <li>
+                <strong>Q: Can I see a visual preview of my customized product?</strong><br>
+                A: Yes, you'll receive a visual preview of your customized product before purchase to ensure satisfaction.
+            </li>
+        </ul>
+    </div>
+
+    <div class="container mx-auto mt-2 p-4 bg-gray-300 text-gray-800 rounded shadow-lg" style="max-height: 300px; overflow-y: auto;">
+        <h2 class="text-2xl font-semibold text-center">Examples of Conversations</h2>
+        <ul class="list-disc list-inside mt-2">
+            <!-- Add other conversation examples here -->
+            <li>I want to change the wheel color to a vibrant green to give my car a unique and eye-catching look.</li>
+            <li>The body color should be a bright and energetic shade of orange.</li>
+            <li>For a bold contrast, I'd like to change the exhaust color to a striking shade of red, making it stand out.</li>
+            <li>To create a cohesive interior, I'll modify the dashboard color to a complementary shade of green, enhancing the car's overall aesthetics.</li>
+            <li>I've decided to switch the body color once more, this time to a calming and elegant blue to suit my taste.</li>
+            <li>Let's make the glass color a subtle yet stylish gray to maintain a harmonious color scheme throughout the vehicle.</li>
+            <li>Finally, I'd like to adjust the glass color to a warm and inviting shade of orange, adding a touch of personality to the car.</li>
+        </ul>
+    </div>
+    
+
+    <div class="container mx-auto mt-2 p-4 bg-gray-300 text-gray-800 rounded shadow-lg">
+        <h2 class="text-2xl font-semibold text-center">Available Part Names and Colors</h2>
+        <div class="grid grid-cols-2 gap-4 mt-2">
+            <ul>
+                <li><strong>Part Names:</strong></li>
+                <!-- Add part names here -->
+                part_names = ["wheels", "wheel", "tires", "tire", "light", "exhaust","glass", "dashboard", "body", "spoiler", "spoilers", "wing", "lighting", "lights"]
+
+            </ul>
+            <ul>
+                <li><strong>Colors:</strong></li>
+                <!-- Add colors here -->
+                colors = ["red", "black", "blue", "green", "white", "silver", "yellow", "purple", "orange", "gray", "pink", "brown", "turquoise", "gold", "maroon", "lavender", "teal", "cyan", "indigo", "violet"]
+
+            </ul>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
